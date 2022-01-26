@@ -1,6 +1,9 @@
 name: actions wrokflow
 
-on: [push]
+on:
+  push:
+  pull_request:
+    types: ["opened"]
 
 jobs:
   run-github-actions:
@@ -10,7 +13,8 @@ jobs:
         run: |
           pwd
           ls  -la
-          env
+          echo "github sha ${GITHUB_SHA}"
+          echo "github ref ${GITHUB_REF}"
 
       - name: checkout
         uses: actions/checkout@v1
