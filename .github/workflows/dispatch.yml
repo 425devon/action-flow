@@ -1,10 +1,9 @@
 name: simple dispatch
 
 on:
+# repository_dispatch runs from default branch... https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#repository_dispatch
   repository_dispatch:
     types: [foo, bar]
-    branches:
-      - '*'
 
 jobs:
   run-dispatch-job:
