@@ -3,7 +3,7 @@ name: shell commands
 on: 
   push:
     branches:
-      - simple-actions
+      - first-workflow
 
 jobs:
   run-shell-command:

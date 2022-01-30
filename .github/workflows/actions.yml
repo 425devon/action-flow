@@ -3,11 +3,11 @@ name: actions wrokflow
 on:
   push:
     branches:
-      - first-workflow
+      - simple-actions
   pull_request:
     types: ["opened"]
     branches:
-      - first-workflow
+      - simple-actions
 
 jobs:
   run-github-actions:
