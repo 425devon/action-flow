@@ -4,7 +4,7 @@ on:
   repository_dispatch:
     types: [foo, bar]
     branches:
-      - dispatch-event
+      - '*'
 
 jobs:
   run-dispatch-job:
