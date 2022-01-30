@@ -3,10 +3,12 @@ name: simple dispatch
 on:
   repository_dispatch:
     types: [foo, bar]
+    branches:
+      - dispatch-event
 
 jobs:
   run-dispatch-job:
     runs-on: ubuntu-latest
     steps:
-      - name: echo a string
-        run: echo "Hello World!"
+      - name: list payload
+        run: echo ${{ github.event.client_payload }}
