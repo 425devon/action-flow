@@ -14,6 +14,5 @@ jobs:
           git fetch --tags
           echo $(git tag)
 
-          LATEST_A_VER=$(git describe --match "a-*" --abbrev=0 --tags main 2>/dev/null)
-          echo "latest a version: ${LATEST_A_VER}"
+          git describe --match "a-*" --abbrev=0 --tags main 2>/dev/null)
 
