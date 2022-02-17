@@ -12,6 +12,8 @@ jobs:
         id: fetch-tags
         run: |
           git fetch --tags
+          git fetch --prune --unshallow || true
+          
           echo $(git tag)
 
           git describe --match "a-*" --abbrev=0 --tags
