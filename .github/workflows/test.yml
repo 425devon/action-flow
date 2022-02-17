@@ -14,4 +14,4 @@ jobs:
           git fetch --tags
           echo $(git tag)
 
-          git describe --match "a-*" --abbrev=0 --tags 2>/dev/null
+          git describe --match "a-*" --abbrev=0 --tags
