@@ -11,5 +11,4 @@ jobs:
       - name: test fetch tags
         id: fetch-tags
         run: |
-          git fetch --tags
           echo $(git tag)
