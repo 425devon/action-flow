@@ -23,8 +23,3 @@ jobs:
           echo "latest b version: ${LATEST_B_VER}"
 
           [[ -z ${LATEST_A_VER} ]] && echo "initial ver" || echo ${LATEST_B_VER}
-
-          LATEST_F_VER=$(git describe --match "f-*" --abbrev=0 --tags main 2>/dev/null)
-          echo "latest f version: ${LATEST_F_VER}"
-
-          [[ -z ${LATEST_F_VER} ]] && echo "initial ver" || echo ${LATEST_F_VER}
