@@ -55,17 +55,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: download_artifacts_b
+      - name: download_artifacts
         uses: actions/download-artifact@v2
-        id: dwn_art_b
+        id: download_artifacts
         with:
           name: artifacts
-
+# the leading folder 'artifacts' gets stripped
       - name: extract_art_b
         id: extract_art_b
         run: |
           mkdir artifact_b_extracted
-          tar -xvzf artifacts/art_b.tar.gz -C artifact_b_extracted
+          tar -xvzf art_b.tar.gz -C artifact_b_extracted
           ls artifact_b
 
       - name: inspect_all
