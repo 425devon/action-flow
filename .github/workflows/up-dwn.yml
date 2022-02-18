@@ -52,32 +52,32 @@ jobs:
       - name: inspect_a
         id: inspect_a
         run: |
-          ls artifacts_a
-
-  download_all_stuff:
-    name: download_all_artifacts
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: download_artifacts
-        uses: actions/download-artifact@v2
-        id: artifacts
-        with:
-          name: artifacts_b
-          path: artifacts_b
-
-      - name: inspect_all
-        id: inspect_all
-        run: |
           ls -R
 
-      - name: extract_art_b
-        id: extract_art_b
-        run: |
-          mkdir artifact_b
-          tar -xvzf artifacts_b/art_b.tar.gz -C artifact_b
-          ls artifact_b
+  # download_all_stuff:
+  #   name: download_all_artifacts
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+
+  #     - name: download_artifacts
+  #       uses: actions/download-artifact@v2
+  #       id: artifacts
+  #       with:
+  #         name: artifacts_b
+  #         path: artifacts_b
+
+  #     - name: inspect_all
+  #       id: inspect_all
+  #       run: |
+  #         ls -R
+
+  #     - name: extract_art_b
+  #       id: extract_art_b
+  #       run: |
+  #         mkdir artifact_b
+  #         tar -xvzf artifacts_b/art_b.tar.gz -C artifact_b
+  #         ls artifact_b
 
 
