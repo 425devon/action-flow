@@ -1,0 +1,83 @@
+name: upload_download_test
+on: push
+
+jobs:
+  upload_some_stuff:
+    name: upload_artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: create artifact a
+        id: create_art_a
+        run: |
+          mkdir -p ./artifacts/art_a && touch ./artifacts/art_a/{a..f}.txt
+          tar -czvf ./artifacts/art_a.tar.gz ./artifacts/art_a
+
+      - name: create artifact b
+        id: create_art_b
+        run: |
+          mkdir -p ./artifacts/art_b && touch ./artifacts/art_b/{a..f}.txt
+          tar -czvf ./artifacts/art_b.tar.gz ./artifacts/art_b
+
+      - name: Temporarily save artifacts
+        uses: actions/upload-artifact@v2
+        id: upload
+        with:
+          name: artifacts
+          path: ./artifact
+
+  download_some_stuff:
+    name: download_artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: download_art_a
+        uses: actions/download-artifact@v2
+        id: dwn_art_a
+        with:
+          name: artifacts
+          path: ./artifacts/art_a
+
+      - name: download_art_a_tar
+        uses: actions/download-artifact@v2
+        id: dwn_art_a_tar
+        with:
+          name: artifacts
+          path: ./artifacts
+
+      - name: inspect_a
+        id: inspect_a
+        run: |
+          ls ./artifacts
+          ls -l ./artifacts/art_a
+
+  download_all_stuff:
+    name: download_all_artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: download_artifacts
+        uses: actions/download-artifact@v2
+        id: artifacts
+        with:
+          name: artifacts
+          path: ./artifacts
+
+      - name: inspect_all
+        id: inspect_all
+        run: |
+          ls -R
+
+      - name: extract_art_b
+        id: extract_art_b
+        run: |
+          mkdir artifact_b
+          tar -xvzf artifacts/art_b.tar.gz -C ./artifact_b
+
+
