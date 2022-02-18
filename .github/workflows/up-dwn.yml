@@ -66,7 +66,6 @@ jobs:
         run: |
           mkdir artifact_b_extracted
           tar -xvzf art_b.tar.gz -C artifact_b_extracted
-          ls artifact_b
 
       - name: inspect_all
         id: inspect_all
