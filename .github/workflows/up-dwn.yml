@@ -12,70 +12,63 @@ jobs:
       - name: create artifact a
         id: create_art_a
         run: |
-          mkdir -p artifacts_a/art_a && touch ./artifacts_a/art_a/{a..f}.txt
-          tar -czvf artifacts_a/art_a.tar.gz ./artifacts_a/art_a/
+          mkdir -p artifacts/art_a/dist && touch artifacts/art_a/dist/{a..f}.txt
+          tar -czvf artifacts/art_a.tar.gz artifacts/art_a/
 
       - name: create artifact b
         id: create_art_b
         run: |
-          mkdir -p artifacts_b/art_b && touch ./artifacts_b/art_b/{a..f}.txt
-          tar -czvf artifacts_b/art_b.tar.gz ./artifacts_b/art_b
+          mkdir -p artifacts/art_b/dist && touch artifacts/art_b/dist/{a..f}.txt
+          tar -czvf artifacts/art_b.tar.gz artifacts/art_b
 
-      - name: Temporarily save artifact a
+      - name: Temporarily save artifact
         uses: actions/upload-artifact@v2
-        id: upload_a
+        id: upload
         with:
-          name: artifacts_a
-          path: artifacts_a
-
-      - name: Temporarily save artifact b
-        uses: actions/upload-artifact@v2
-        id: upload_b
-        with:
-          name: artifacts_b
-          path: artifacts_b
+          name: artifacts
+          path: artifacts
 
   download_some_stuff:
-    name: download_artifacts_a
+    name: download_artifacts
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: download_art_a
+      - name: download_artifacts
         uses: actions/download-artifact@v2
-        id: dwn_art_a
+        id: download_artifacts
         with:
-          name: artifacts_a
+          name: artifacts
 
-      - name: inspect_a
-        id: inspect_a
+      - name: inspect
+        id: inspect
         run: |
           ls -R
 
-  download_all_stuff:
-    name: download_all_artifacts
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  # download_all_stuff:
+  #   name: download_all_artifacts
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
 
-      - name: download_artifacts_b
-        uses: actions/download-artifact@v2
-        id: dwn_art_b
-        with:
-          name: artifacts_b
+  #     - name: download_artifacts_b
+  #       uses: actions/download-artifact@v2
+  #       id: dwn_art_b
+  #       with:
+  #         name: artifacts_b
 
-      - name: extract_art_b
-        id: extract_art_b
-        run: |
-          mkdir artifact_b
-          tar -xvzf artifacts_b/art_b.tar.gz -C artifact_b_extracted
-          ls artifact_b
+  #     - name: extract_art_b
+  #       id: extract_art_b
+  #       run: |
+  #         mkdir artifact_b
+  #         tar -xvzf artifacts_b/art_b.tar.gz -C artifact_b_extracted
+  #         ls artifact_b
 
-      - name: inspect_all
-        id: inspect_all
-        run: |
-          ls -R
+  #     - name: inspect_all
+  #       id: inspect_all
+  #       run: |
+  #         ls -R
 
 
