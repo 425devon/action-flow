@@ -26,7 +26,7 @@ jobs:
         id: upload
         with:
           name: artifacts
-          path: ./artifact
+          path: ./artifacts/
 
   download_some_stuff:
     name: download_artifacts
