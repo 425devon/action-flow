@@ -2,38 +2,38 @@ name: upload_download_test
 on: push
 
 jobs:
-  upload_some_stuff:
-    name: upload_artifacts
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  # upload_some_stuff:
+  #   name: upload_artifacts
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
 
-      - name: create artifact a
-        id: create_art_a
-        run: |
-          mkdir -p artifacts_a/art_a && touch ./artifacts_a/art_a/{a..f}.txt
-          tar -czvf artifacts_a/art_a.tar.gz ./artifacts_a/art_a/
+  #     - name: create artifact a
+  #       id: create_art_a
+  #       run: |
+  #         mkdir -p artifacts_a/art_a && touch ./artifacts_a/art_a/{a..f}.txt
+  #         tar -czvf artifacts_a/art_a.tar.gz ./artifacts_a/art_a/
 
-      - name: create artifact b
-        id: create_art_b
-        run: |
-          mkdir -p artifacts_b/art_b && touch ./artifacts_b/art_b/{a..f}.txt
-          tar -czvf artifacts_b/art_b.tar.gz ./artifacts_b/art_b
+  #     - name: create artifact b
+  #       id: create_art_b
+  #       run: |
+  #         mkdir -p artifacts_b/art_b && touch ./artifacts_b/art_b/{a..f}.txt
+  #         tar -czvf artifacts_b/art_b.tar.gz ./artifacts_b/art_b
 
-      - name: Temporarily save artifact a
-        uses: actions/upload-artifact@v2
-        id: upload_a
-        with:
-          name: artifacts_a
-          path: artifacts_a
+  #     - name: Temporarily save artifact a
+  #       uses: actions/upload-artifact@v2
+  #       id: upload_a
+  #       with:
+  #         name: artifacts_a
+  #         path: artifacts_a
 
-      - name: Temporarily save artifact b
-        uses: actions/upload-artifact@v2
-        id: upload_b
-        with:
-          name: artifacts_b
-          path: artifacts_b
+  #     - name: Temporarily save artifact b
+  #       uses: actions/upload-artifact@v2
+  #       id: upload_b
+  #       with:
+  #         name: artifacts_b
+  #         path: artifacts_b
 
   download_some_stuff:
     name: download_artifacts
