@@ -47,26 +47,24 @@ jobs:
         id: dwn_art_a
         with:
           name: artifacts_a
-          path: artifacts_a
 
       - name: inspect_a
         id: inspect_a
         run: |
           ls -R
 
-  # download_all_stuff:
-  #   name: download_all_artifacts
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+  download_all_stuff:
+    name: download_all_artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: download_artifacts_b
         uses: actions/download-artifact@v2
         id: dwn_art_b
         with:
           name: artifacts_b
-          path: artifacts_b
 
       - name: extract_art_b
         id: extract_art_b
