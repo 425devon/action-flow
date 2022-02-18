@@ -53,6 +53,7 @@ jobs:
         id: inspect_a
         run: |
           ls -R
+          echo "gh u crazy"
 
   # download_all_stuff:
   #   name: download_all_artifacts
