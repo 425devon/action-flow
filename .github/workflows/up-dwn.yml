@@ -30,6 +30,7 @@ jobs:
 
   download_some_stuff:
     name: download_artifacts
+    needs: upload_some_stuff
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -46,29 +47,30 @@ jobs:
         run: |
           ls -R
 
-  # download_all_stuff:
-  #   name: download_all_artifacts
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+  do_some_stuff:
+    name: do_some_stuff
+    needs: upload_some_stuff
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  #     - name: download_artifacts_b
-  #       uses: actions/download-artifact@v2
-  #       id: dwn_art_b
-  #       with:
-  #         name: artifacts_b
+      - name: download_artifacts_b
+        uses: actions/download-artifact@v2
+        id: dwn_art_b
+        with:
+          name: artifacts
 
-  #     - name: extract_art_b
-  #       id: extract_art_b
-  #       run: |
-  #         mkdir artifact_b
-  #         tar -xvzf artifacts_b/art_b.tar.gz -C artifact_b_extracted
-  #         ls artifact_b
+      - name: extract_art_b
+        id: extract_art_b
+        run: |
+          mkdir artifact_b_extracted
+          tar -xvzf artifacts/art_b.tar.gz -C artifact_b_extracted
+          ls artifact_b
 
-  #     - name: inspect_all
-  #       id: inspect_all
-  #       run: |
-  #         ls -R
+      - name: inspect_all
+        id: inspect_all
+        run: |
+          ls -R
 
 
