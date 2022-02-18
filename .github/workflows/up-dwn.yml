@@ -12,21 +12,28 @@ jobs:
       - name: create artifact a
         id: create_art_a
         run: |
-          mkdir -p ./artifacts/art_a && touch ./artifacts/art_a/{a..f}.txt
-          tar -czvf ./artifacts/art_a.tar.gz ./artifacts/art_a
+          mkdir -p ./artifacts_a/art_a && touch ./artifacts_a/art_a/{a..f}.txt
+          tar -czvf ./artifacts_a/art_a.tar.gz ./artifacts_a/art_a
 
       - name: create artifact b
         id: create_art_b
         run: |
-          mkdir -p ./artifacts/art_b && touch ./artifacts/art_b/{a..f}.txt
-          tar -czvf ./artifacts/art_b.tar.gz ./artifacts/art_b
+          mkdir -p ./artifacts_b/art_b && touch ./artifacts_b/art_b/{a..f}.txt
+          tar -czvf ./artifacts_b/art_b.tar.gz ./artifacts_b/art_b
 
-      - name: Temporarily save artifacts
+      - name: Temporarily save artifact a
         uses: actions/upload-artifact@v2
-        id: upload
+        id: upload_a
         with:
-          name: artifacts
-          path: ./artifacts/
+          name: artifacts_a
+          path: ./artifacts_a/
+
+      - name: Temporarily save artifact b
+        uses: actions/upload-artifact@v2
+        id: upload_b
+        with:
+          name: artifacts_b
+          path: ./artifacts_b/
 
   download_some_stuff:
     name: download_artifacts
@@ -39,21 +46,25 @@ jobs:
         uses: actions/download-artifact@v2
         id: dwn_art_a
         with:
-          name: artifacts
-          path: ./artifacts/art_a
+          name: artifacts_a
+          path: ./artifacts_a/art_a
+
+      - name: inspect_a
+        id: inspect_a
+        run: |
+          ls ./artifacts_a
 
       - name: download_art_a_tar
         uses: actions/download-artifact@v2
         id: dwn_art_a_tar
         with:
-          name: artifacts
-          path: ./artifacts
+          name: artifacts_a
+          path: ./artifacts_a/
 
-      - name: inspect_a
-        id: inspect_a
+      - name: inspect_a_2
+        id: inspect_a_2
         run: |
-          ls ./artifacts
-          ls -l ./artifacts/art_a
+          ls ./artifacts_a
 
   download_all_stuff:
     name: download_all_artifacts
@@ -66,8 +77,8 @@ jobs:
         uses: actions/download-artifact@v2
         id: artifacts
         with:
-          name: artifacts
-          path: ./artifacts
+          name: artifacts_b
+          path: ./artifacts_b
 
       - name: inspect_all
         id: inspect_all
@@ -78,6 +89,7 @@ jobs:
         id: extract_art_b
         run: |
           mkdir artifact_b
-          tar -xvzf artifacts/art_b.tar.gz -C ./artifact_b
+          tar -xvzf artifacts_b/art_b.tar.gz -C ./artifact_b
+          ls ./artifact_b
 
 
