@@ -47,22 +47,10 @@ jobs:
         id: dwn_art_a
         with:
           name: artifacts_a
-          path: ./artifacts_a/art_a
+          path: ./artifacts_a
 
       - name: inspect_a
         id: inspect_a
-        run: |
-          ls ./artifacts_a
-
-      - name: download_art_a_tar
-        uses: actions/download-artifact@v2
-        id: dwn_art_a_tar
-        with:
-          name: artifacts_a
-          path: ./artifacts_a/
-
-      - name: inspect_a_2
-        id: inspect_a_2
         run: |
           ls ./artifacts_a
 
