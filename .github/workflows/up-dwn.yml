@@ -53,32 +53,31 @@ jobs:
         id: inspect_a
         run: |
           ls -R
-          echo "gh u crazy"
 
-  # download_all_stuff:
-  #   name: download_all_artifacts
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+  download_all_stuff:
+    name: download_all_artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  #     - name: download_artifacts
-  #       uses: actions/download-artifact@v2
-  #       id: artifacts
-  #       with:
-  #         name: artifacts_b
-  #         path: artifacts_b
+      - name: download_artifacts
+        uses: actions/download-artifact@v2
+        id: dwn_art_b
+        with:
+          name: artifacts_b
+          path: artifacts_b
 
-  #     - name: inspect_all
-  #       id: inspect_all
-  #       run: |
-  #         ls -R
+      - name: extract_art_b
+        id: extract_art_b
+        run: |
+          mkdir artifact_b
+          tar -xvzf artifacts_b/art_b.tar.gz -C artifact_b_extracted
+          ls artifact_b
 
-  #     - name: extract_art_b
-  #       id: extract_art_b
-  #       run: |
-  #         mkdir artifact_b
-  #         tar -xvzf artifacts_b/art_b.tar.gz -C artifact_b
-  #         ls artifact_b
+      - name: inspect_all
+        id: inspect_all
+        run: |
+          ls -R
 
 
