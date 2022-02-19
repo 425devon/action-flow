@@ -25,6 +25,11 @@ jobs:
         with:
           node-version: '14.18.0'
 
+      - name: Install Dependencies
+        run: |
+          cp .npmrc.ci .npmrc
+          yarn --frozen-lockfile --production=false
+
       - name: Lint
         run: yarn --cwd hello-world lint
 
