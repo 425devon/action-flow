@@ -97,6 +97,7 @@ jobs:
 
     - name: Deploy netlify preview on push
       id: netlify_on_push
+      if: ${{ github.event_name != 'pull_request' }}
       run: |
         netlifyDeploy=$(netlify deploy --dir ./hello-world/dist/ \
         --timeout 600 \
@@ -117,6 +118,7 @@ jobs:
         else
           echo "::set-output name=deploy_id::${{ steps.netlify_on_push.outputs.deploy_id }}"
           echo "::set-output name=deploy_url::${{ steps.netlify_on_push.outputs.push_deploy_url }}"
+        fi
 
   # smoketest_client:
   #   name: Smoke test client
