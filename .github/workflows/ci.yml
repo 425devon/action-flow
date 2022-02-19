@@ -26,8 +26,7 @@ jobs:
           node-version: '14.18.0'
 
       - name: run yarn
-        run: yarn && yarn install -g @vue/cli
-
+        run: yarn && yarn global add @vue/cli
       - name: run yarn
         run: yarn --cwd hello-world lint
 
