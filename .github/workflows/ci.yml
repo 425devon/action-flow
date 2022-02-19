@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       deploy_id: ${{steps.netlify_outputs.deploy_id}}
-      deploy_url: ${{steps.netlify_outputs.deploy_url}
+      deploy_url: ${{steps.netlify_outputs.deploy_url}}
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v2
