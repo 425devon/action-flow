@@ -20,15 +20,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14.18.0'
-
-      - name: Install Dependencies
-        run: |
-          cp .npmrc.ci .npmrc
-          yarn --frozen-lockfile --production=false
+      - name: Setup node and install dependencies
+        uses: ./.github/actions/setup-node-with-dependencies/
 
       - name: Lint
         run: yarn --cwd hello-world lint
@@ -41,6 +34,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Setup node and install dependencies
+        uses: ./.github/actions/setup-node-with-dependencies/
 
       - name: build konnect client on push
         id: build-client
