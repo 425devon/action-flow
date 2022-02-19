@@ -69,7 +69,7 @@ jobs:
   netlify_preview:
     name: netlify_preview
     needs: build_assets
-    if: ${{ needs.build_assets.result == 'success' || needs.build_assets.result == 'skipped' }}
+    if: ${{ always() && needs.build_assets.result == 'success' || needs.build_assets.result == 'skipped' }}
     runs-on: ubuntu-latest
     outputs:
       deploy_id: ${{steps.netlify_info.outputs.deploy_id}}
