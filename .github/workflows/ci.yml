@@ -124,7 +124,7 @@ jobs:
     name: Smoke test client
     needs: netlify_preview
     runs-on: ubuntu-20.04
-    if: ${{needs.netlify_preview.outputs.deploy_id}}
+    if: ${{ always() && needs.netlify_preview.outputs.deploy_id}}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
