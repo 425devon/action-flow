@@ -26,7 +26,7 @@ jobs:
           node-version: '14.18.0'
 
       - name: run yarn
-        run: yarn && yarn global add @vue/cli
+        run: yarn global add @vue/cli && yarn install
       - name: run yarn
         run: yarn --cwd hello-world lint
 
@@ -116,4 +116,3 @@ jobs:
         run: |
           echo "id: ${{needs.netlify_preview.outputs.deploy_id}}"
           echo "id: ${{needs.netlify_preview.outputs.deploy_url}}"
-
