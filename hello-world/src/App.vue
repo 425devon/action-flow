@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Action Flow Testing"/>
+    <img alt="grr logo" src="./assets/grr.png">
+    <HelloWorld msg="Action Flow Testing v0.0.0-2"/>
   </div>
 </template>
 
