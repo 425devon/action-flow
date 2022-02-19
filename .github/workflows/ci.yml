@@ -68,7 +68,7 @@ jobs:
 
   netlify_preview:
     name: netlify_preview
-    needs: [build_assets]
+    needs: build_assets
     if: ${{ needs.build_assets.result == 'success' || needs.build_assets.result == 'skipped' }}
     runs-on: ubuntu-latest
     outputs:
@@ -122,7 +122,7 @@ jobs:
 
   smoketest_client:
     name: Smoke test client
-    needs: [lint_and_unit_tests, netlify_preview]
+    needs: netlify_preview
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -131,4 +131,4 @@ jobs:
       - name: check env
         run: |
           echo "id: ${{needs.netlify_preview.outputs.deploy_id}}"
-          echo "id: ${{needs.netlify_preview.outputs.deploy_url}}"
+          echo "url: ${{needs.netlify_preview.outputs.deploy_url}}"
