@@ -1,5 +1,5 @@
 name: upload_download_test
-on: push
+on: workflow_dispatch
 
 jobs:
   upload_some_stuff:
