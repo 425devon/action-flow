@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: '14.18.0'
 
-      - run: yarn --frozen-lockfile
+      - run: yarn --cwd hello-world --frozen-lockfile
 
       - name: run yarn lint
         run: yarn --cwd hello-world lint
