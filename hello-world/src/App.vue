@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <img alt="grr logo" src="./assets/grr.png">
-    <HelloWorld msg="Action Flow Testing v0.0.0-2"/>
+    <HelloWorld msg="Action Flow Testing v0.0.1-0"/>
   </div>
 </template>
 
