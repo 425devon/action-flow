@@ -28,8 +28,6 @@ jobs:
           ndiff=$(git diff HEAD..origin/main --name-only)
           if [[ "$ndiff" == *"hello-world"* ]]; then
             echo "::set-output name=changes::true"
-          else
-            echo "::set-output name=changes::false"
           fi
           
       - name: Setup Node
@@ -90,47 +88,49 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v2
 
-    - name: Wait for the netlify preview on pull
-      if: ${{ github.event_name == 'pull_request' }}
-      id: netlify_on_pull
-      uses: kamranayub/wait-for-netlify-action@v2.0.3
-      with:
-        site_name: 'action-flow'
-        max_timeout: 600
-      env:
-        NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    - run: echo "this should be skipped"
 
-    - name: download_artifacts
-      uses: actions/download-artifact@v2
-      if: ${{ github.event_name != 'pull_request' }}
-      id: download_artifacts
-      with:
-        name: artifacts
+    # - name: Wait for the netlify preview on pull
+    #   if: ${{ github.event_name == 'pull_request' }}
+    #   id: netlify_on_pull
+    #   uses: kamranayub/wait-for-netlify-action@v2.0.3
+    #   with:
+    #     site_name: 'action-flow'
+    #     max_timeout: 600
+    #   env:
+    #     NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
-    - name: Deploy netlify preview on push
-      id: netlify_on_push
-      if: ${{ github.event_name != 'pull_request' }}
-      run: |
-        netlifyDeploy=$(netlify deploy --dir ./hello-world/dist/ \
-        --timeout 600 \
-        --json | tr -d '\n')
+    # - name: download_artifacts
+    #   uses: actions/download-artifact@v2
+    #   if: ${{ github.event_name != 'pull_request' }}
+    #   id: download_artifacts
+    #   with:
+    #     name: artifacts
 
-        echo "::set-output name=push_deploy_id ::$(echo $netlifyDeploy|jq '.deploy_id')"
-        echo "::set-output name=push_deploy_url ::$(echo $netlifyDeploy|jq '.deploy_url')"
-      env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+    # - name: Deploy netlify preview on push
+    #   id: netlify_on_push
+    #   if: ${{ github.event_name != 'pull_request' }}
+    #   run: |
+    #     netlifyDeploy=$(netlify deploy --dir ./hello-world/dist/ \
+    #     --timeout 600 \
+    #     --json | tr -d '\n')
 
-    - name: set outputs
-      id: netlify_info
-      run: |
-        if [[ $GITHUB_EVENT_NAME == pull_request ]]; then
-          echo "::set-output name=deploy_id::${{ steps.netlify_on_pull.outputs.deploy_id }}"
-          echo "::set-output name=deploy_url::${{ steps.netlify_on_pull.outputs.url }}"
-        else
-          echo "::set-output name=deploy_id::${{ steps.netlify_on_push.outputs.push_deploy_id }}"
-          echo "::set-output name=deploy_url::${{ steps.netlify_on_push.outputs.push_deploy_url }}"
-        fi
+    #     echo "::set-output name=push_deploy_id ::$(echo $netlifyDeploy|jq '.deploy_id')"
+    #     echo "::set-output name=push_deploy_url ::$(echo $netlifyDeploy|jq '.deploy_url')"
+    #   env:
+    #       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    #       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+    # - name: set outputs
+    #   id: netlify_info
+    #   run: |
+    #     if [[ $GITHUB_EVENT_NAME == pull_request ]]; then
+    #       echo "::set-output name=deploy_id::${{ steps.netlify_on_pull.outputs.deploy_id }}"
+    #       echo "::set-output name=deploy_url::${{ steps.netlify_on_pull.outputs.url }}"
+    #     else
+    #       echo "::set-output name=deploy_id::${{ steps.netlify_on_push.outputs.push_deploy_id }}"
+    #       echo "::set-output name=deploy_url::${{ steps.netlify_on_push.outputs.push_deploy_url }}"
+    #     fi
 
   smoketest_client:
     name: Smoke test client
