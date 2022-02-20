@@ -84,7 +84,7 @@ jobs:
     if: |
       always() &&
       needs.lint_and_unit_tests.outputs.changes &&
-      needs.build_assets.result == 'success' || needs.build_assets.result == 'skipped' }}
+      needs.build_assets.result == 'success' || needs.build_assets.result == 'skipped'
     runs-on: ubuntu-latest
     outputs:
       deploy_id: ${{steps.netlify_info.outputs.deploy_id}}
