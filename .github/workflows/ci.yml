@@ -25,6 +25,7 @@ jobs:
       - name: Look for changes
         id: 'changes'
         run: |
+          git fetch origin main --depth=1 --quiet
           ndiff=$(git diff origin/main --name-only)
           if [[ "$ndiff" == *"hello-world"* ]]; then
             echo "::set-output name=changes::true"
