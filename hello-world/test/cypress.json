@@ -1,0 +1,15 @@
+{
+    "$schema": "https://on.cypress.io/cypress.schema.json",
+    "baseUrl": "https://<override_me>",
+    "chromeWebSecurity": false,
+    "defaultCommandTimeout": 10000,
+    "fixturesFolder": "test/fixtures",
+    "integrationFolder": "test/specs",
+    "pluginsFile": "test/plugins/index.ts",
+    "reporter": "spec",
+    "screenshotsFolder": "test/screenshots",
+    "supportFile": "test/support/index.ts",
+    "viewportWidth": 1920,
+    "viewportHeight": 1080,
+    "videosFolder": "test/videos"
+}
