@@ -107,12 +107,12 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-    - name: wait for netlify
-      id: wait
-      uses: ./.github/actions/wait-for-netlify
-      with:
-        site_url: ${{ steps.netlify.outputs.url }}
-        max_timeout: 600
+    # - name: wait for netlify
+    #   id: wait
+    #   uses: ./.github/actions/wait-for-netlify
+    #   with:
+    #     site_url: ${{ steps.netlify.outputs.url }}
+    #     max_timeout: 600
 
   smoketest_client:
     name: Smoke test client
