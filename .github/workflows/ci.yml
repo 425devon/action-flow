@@ -105,8 +105,8 @@ jobs:
         --timeout 600 \
         --json | tr -d '\n')
 
-        echo "::set-output name=push_deploy_id ::$(echo $netlifyDeploy|jq '.deploy_id')"
-        echo "::set-output name=push_deploy_url ::$(echo $netlifyDeploy|jq '.deploy_url')"
+        echo "::set-output name=deploy_id ::$(echo $netlifyDeploy|jq '.deploy_id')"
+        echo "::set-output name=deploy_url ::$(echo $netlifyDeploy|jq '.deploy_url')"
       env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
