@@ -125,7 +125,7 @@ jobs:
       id: netlify_info
       run: |
         echo "::set-output name=deploy_id::${{ steps.netlify.outputs.deploy_id }}"
-        echo "::set-output name=deploy_url::${{ steps.netlify.outputs.url }}"
+        echo "::set-output name=deploy_url::${{ steps.netlify.outputs.deploy_url }}"
 
   smoketest_client:
     name: Smoke test client
