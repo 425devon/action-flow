@@ -8,7 +8,7 @@ describe('App Test', function () {
     })
   
     it('tests that the header contains the text', function () {
-      cy.get('.hello h1').should('contain', 'Action Flow Testing v0.0.1-2')
+      cy.get('.hello h1').should('include.text', 'Action Flow Testing')
     })
   })
   

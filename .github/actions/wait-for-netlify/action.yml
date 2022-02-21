@@ -1,0 +1,30 @@
+name: 'Wait for netlify'
+description: 'Waits for netlify to deploy'
+inputs:
+  site_url:  # id of input
+    description: 'name of netlify site'
+    required: true
+  max_timeout:
+    description: 'maximum time to wait for deployment'
+    required: false
+    default: '600'
+outputs:
+  success:
+    description: "whether or not the website was successfuly deployed"
+    value: ${{ steps.wait.outputs.success }}
+runs:
+  using: "composite"
+  steps:
+    - name: Wait for netlify
+      id: wait
+      shell: bash
+      run: |
+        end=$((SECONDS+${{ inputs.max_timeout }}))
+        while [ $SECONDS -lt $end ]; do
+          if [[ $(curl -s -o /dev/null -w "%{http_code}" ${{ inputs.site_url }})  = 200 ]]; then
+            echo "${{ inputs.site_url }} is live!"
+            echo "::set-output name=success::true"
+            break
+          fi
+          sleep 1
+        done
