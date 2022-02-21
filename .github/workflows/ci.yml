@@ -85,8 +85,8 @@ jobs:
     if: ${{ needs.lint_and_unit_tests.outputs.changes }}
     runs-on: ubuntu-latest
     outputs:
-      deploy_id: ${{steps.netlify.outputs.deploy_id}}
-      deploy_url: ${{steps.netlify.outputs.deploy_url}}
+      deploy_id: ${{steps.netlify_info.outputs.deploy_id}}
+      deploy_url: ${{steps.netlify_info.outputs.deploy_url}}
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v2
@@ -120,6 +120,12 @@ jobs:
       with:
         site_url: 'https://deploy-preview-9--action-flow.netlify.app/'
         max_timeout: 600
+
+    - name: set outputs
+      id: netlify_info
+      run: |
+        echo "::set-output name=deploy_id::${{ steps.netlify.outputs.deploy_id }}"
+        echo "::set-output name=deploy_url::${{ steps.netlify.outputs.url }}"
 
   smoketest_client:
     name: Smoke test client
