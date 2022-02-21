@@ -1,7 +1,7 @@
 name: 'Wait for netlify'
 description: 'Waits for netlify to deploy'
 inputs:
-  site_name:  # id of input
+  site_url:  # id of input
     description: 'name of netlify site'
     required: true
   max_timeout:
@@ -21,7 +21,7 @@ runs:
       run: |
         end=$((SECONDS+${{ inputs.max_timeout }}))
         while [ $SECONDS -lt $end ]; do
-          if [[ $(curl -s -o /dev/null -w "%{http_code}" https://${COMMIT_REF}--${{ inputs.siteName }}.netlify.app)  = 200 ]]; then
+          if [[ $(curl -s -o /dev/null -w "%{http_code}" ${{ inputs.site_url }})  = 200 ]]; then
             echo "${{ inputs.site_url }} is live!"
             echo "::set-output name=success::true"
             break
