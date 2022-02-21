@@ -12,9 +12,6 @@ defaults:
   run:
     shell: bash
 
-env:
-  COMMIT_REF: '${{github.sha}}'
-
 jobs:
   lint_and_unit_tests:
     name: Lint and validate
@@ -33,112 +30,123 @@ jobs:
           if [[ "$ndiff" == *"hello-world"* ]]; then
             echo "::set-output name=changes::true"
           fi
+      - run: echo "base_ref - ${{github.base_ref}}"
           
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14.18.0'
+      # - name: Setup Node
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: '14.18.0'
 
-      - run: yarn --cwd hello-world --frozen-lockfile
+      # - run: yarn --cwd hello-world --frozen-lockfile
 
-      - name: run yarn lint
-        run: yarn --cwd hello-world lint
+      # - name: run yarn lint
+      #   run: yarn --cwd hello-world lint
 
-  build_assets:
-    name: build assets
-    needs: lint_and_unit_tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  # build_assets:
+  #   name: build assets
+  #   needs: lint_and_unit_tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
 
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14.18.0'
+  #     - name: Setup Node
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: '14.18.0'
 
-      - run: yarn --cwd hello-world --frozen-lockfile
+  #     - run: yarn --cwd hello-world --frozen-lockfile
 
-      - name: build konnect client on push
-        id: build-client
-        run: |
-          yarn --cwd hello-world build
+  #     - name: build konnect client on push
+  #       id: build-client
+  #       run: |
+  #         yarn --cwd hello-world build
 
-          mkdir -p artifacts/hello-world
-          cp -R hello-world/dist artifacts/hello-world
+  #         mkdir -p artifacts/hello-world
+  #         cp -R hello-world/dist artifacts/hello-world
 
-          if [[ -d hello-world/dist ]]; then
-            tar -czvf artifacts/hello-world/hello-world.tar.gz hello-world/dist
-          fi
+  #         if [[ -d hello-world/dist ]]; then
+  #           tar -czvf artifacts/hello-world/hello-world.tar.gz hello-world/dist
+  #         fi
 
-      - name: Temporarily save artifacts
-        if: hashFiles('artifacts/') != ''
-        uses: actions/upload-artifact@v2
-        id: save_artifacts
-        with:
-          name: artifacts
-          path: artifacts
+  #     - name: Temporarily save artifacts
+  #       if: hashFiles('artifacts/') != ''
+  #       uses: actions/upload-artifact@v2
+  #       id: save_artifacts
+  #       with:
+  #         name: artifacts
+  #         path: artifacts
 
-  netlify_preview:
-    name: netlify_preview
-    needs: [lint_and_unit_tests, build_assets]
-    if: ${{ needs.lint_and_unit_tests.outputs.changes }}
-    runs-on: ubuntu-latest
-    outputs:
-      deploy_id: ${{steps.netlify_info.outputs.deploy_id}}
-      deploy_url: ${{steps.netlify_info.outputs.deploy_url}}
-    steps:
-    - name: Checkout Source Code
-      uses: actions/checkout@v2
+  # netlify_preview:
+  #   name: netlify_preview
+  #   needs: [lint_and_unit_tests, build_assets]
+  #   if: ${{ needs.lint_and_unit_tests.outputs.changes }}
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     deploy_id: ${{steps.netlify_info.outputs.deploy_id}}
+  #     deploy_url: ${{steps.netlify_info.outputs.deploy_url}}
+  #   steps:
+  #   - name: Checkout Source Code
+  #     uses: actions/checkout@v2
 
-    - name: download_artifacts
-      uses: actions/download-artifact@v2
-      id: download_artifacts
-      with:
-        name: artifacts
+  #   - name: download_artifacts
+  #     uses: actions/download-artifact@v2
+  #     id: download_artifacts
+  #     with:
+  #       name: artifacts
 
-    - name: Deploy netlify preview on push
-      id: netlify
-      run: |
-        pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-        netlifyDeploy=$(netlify deploy --dir ./hello-world/dist/ \
-        --timeout 600 \
-        --json | tr -d '\n')
+  #   - name: Deploy netlify preview on push
+  #     id: netlify
+  #     run: |
+  #       pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+  #       netlifyDeploy=$(netlify deploy --dir ./hello-world/dist/ \
+  #       --timeout 600 \
+  #       --json | tr -d '\n')
 
-        echo "::set-output name=deploy_id ::$(echo $netlifyDeploy|jq '.deploy_id')"
-        echo "::set-output name=deploy_url ::$(echo $netlifyDeploy|jq '.deploy_url')"
-      env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  #       echo "::set-output name=deploy_id ::$(echo $netlifyDeploy|jq '.deploy_id')"
+  #       echo "::set-output name=deploy_url ::$(echo $netlifyDeploy|jq '.deploy_url')"
+  #     env:
+  #         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  #         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-    # on PR follows https://deploy-preview-9--action-flow.netlify.app/ format
-    # on merge follows https://main--action-flow.netlify.app/ format
+  #   # on PR follows https://deploy-preview-9--action-flow.netlify.app/ format
+  #   # on merge follows https://main--action-flow.netlify.app/ format
 
-    - name: wait for netlify
-      id: wait
-      uses: ./.github/actions/wait-for-netlify
-      with:
-        site_url: 'https://deploy-preview-9--action-flow.netlify.app/'
-        max_timeout: 600
+  #   - name: format wait for netlify url
+  #     id: wait-url
+  #     run: |
+  #       if [[ $GITHUB_EVENT_NAME == pull_request ]]; then
+  #         pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+  #         echo "::set-output name=wait_url::https://deploy-preview-"$pull_number"--action-flow.netlify.app/"
+  #       else
+  #         echo "::set-output name=wait_url::https://${{github.base_ref}}--action-flow.netlify.app/"
+  #       fi
 
-    - name: set outputs
-      id: netlify_info
-      run: |
-        echo "::set-output name=deploy_id::${{ steps.netlify.outputs.deploy_id }}"
-        echo "::set-output name=deploy_url::${{ steps.netlify.outputs.deploy_url }}"
+  #   - name: wait for netlify
+  #     id: wait
+  #     uses: ./.github/actions/wait-for-netlify
+  #     with:
+  #       site_url: 'https://deploy-preview-9--action-flow.netlify.app/'
+  #       max_timeout: 600
 
-  smoketest_client:
-    name: Smoke test client
-    needs: [lint_and_unit_tests, netlify_preview]
-    if: |
-      github.event_name == 'push' || needs.lint_and_unit_tests.outputs.changes &&
-      needs.netlify_preview.outputs.deploy_id
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  #   - name: set outputs
+  #     id: netlify_info
+  #     run: |
+  #       echo "::set-output name=deploy_id::${{ steps.netlify.outputs.deploy_id }}"
+  #       echo "::set-output name=deploy_url::${{ steps.netlify.outputs.deploy_url }}"
 
-      - name: check env
-        run: |
-          echo "id: ${{needs.netlify_preview.outputs.deploy_id}}"
-          echo "url: ${{needs.netlify_preview.outputs.deploy_url}}"
+  # smoketest_client:
+  #   name: Smoke test client
+  #   needs: [lint_and_unit_tests, netlify_preview]
+  #   if: |
+  #     github.event_name == 'push' || needs.lint_and_unit_tests.outputs.changes &&
+  #     needs.netlify_preview.outputs.deploy_id
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+
+  #     - name: check env
+  #       run: |
+  #         echo "id: ${{needs.netlify_preview.outputs.deploy_id}}"
+  #         echo "url: ${{needs.netlify_preview.outputs.deploy_url}}"
