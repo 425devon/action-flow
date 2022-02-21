@@ -79,37 +79,23 @@ jobs:
   netlify_preview:
     name: netlify_preview
     needs: [lint_and_unit_tests, build_assets]
-    if: |
-      github.event_name == 'push' || needs.lint_and_unit_tests.outputs.changes &&
-      needs.build_assets.result == 'success' || needs.build_assets.result == 'skipped'
+    if: ${{ needs.lint_and_unit_tests.outputs.changes }}
     runs-on: ubuntu-latest
     outputs:
-      deploy_id: ${{steps.netlify_info.outputs.deploy_id}}
-      deploy_url: ${{steps.netlify_info.outputs.deploy_url}}
+      deploy_id: ${{steps.netlify.outputs.deploy_id}}
+      deploy_url: ${{steps.netlify.outputs.deploy_url}}
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v2
 
-    - name: Wait for the netlify preview on pull
-      if: ${{ github.event_name == 'pull_request' }}
-      id: netlify_on_pull
-      uses: kamranayub/wait-for-netlify-action@v2.0.3
-      with:
-        site_name: 'action-flow'
-        max_timeout: 600
-      env:
-        NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-
     - name: download_artifacts
       uses: actions/download-artifact@v2
-      if: ${{ github.event_name != 'pull_request' }}
       id: download_artifacts
       with:
         name: artifacts
 
     - name: Deploy netlify preview on push
-      id: netlify_on_push
-      if: ${{ github.event_name != 'pull_request' }}
+      id: netlify
       run: |
         netlifyDeploy=$(netlify deploy --dir ./hello-world/dist/ \
         --timeout 600 \
@@ -121,16 +107,12 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-    - name: set outputs
-      id: netlify_info
-      run: |
-        if [[ $GITHUB_EVENT_NAME == pull_request ]]; then
-          echo "::set-output name=deploy_id::${{ steps.netlify_on_pull.outputs.deploy_id }}"
-          echo "::set-output name=deploy_url::${{ steps.netlify_on_pull.outputs.url }}"
-        else
-          echo "::set-output name=deploy_id::${{ steps.netlify_on_push.outputs.push_deploy_id }}"
-          echo "::set-output name=deploy_url::${{ steps.netlify_on_push.outputs.push_deploy_url }}"
-        fi
+    - name: wait for netlify
+      id: wait
+      uses: ./.github/actions/wait-for-netlify
+      with:
+        site_url: ${{ steps.netlify.outputs.url }}
+        max_timeout: 600
 
   smoketest_client:
     name: Smoke test client
@@ -147,4 +129,3 @@ jobs:
         run: |
           echo "id: ${{needs.netlify_preview.outputs.deploy_id}}"
           echo "url: ${{needs.netlify_preview.outputs.deploy_url}}"
-          echo "i'm a little tea pot, here is my handle and here is my..."
