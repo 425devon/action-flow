@@ -1,0 +1,9 @@
+[[redirects]]
+  from = "/api/*"
+  to = "/"
+  status = 418
+
+[[redirects]]
+  from = "/health/*"
+  to = "/"
+status = 204

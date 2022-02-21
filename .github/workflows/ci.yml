@@ -68,6 +68,10 @@ jobs:
             tar -czvf artifacts/hello-world/hello-world.tar.gz hello-world/dist
           fi
 
+          if [[ -d hello-world/dist ]]; then
+            cp hello-world/netlify.toml artifacts/hello-world/dist
+          fi
+
       - name: Temporarily save artifacts
         if: hashFiles('artifacts/') != ''
         uses: actions/upload-artifact@v2
@@ -79,7 +83,7 @@ jobs:
   netlify_preview:
     name: netlify_preview
     needs: [lint_and_unit_tests, build_assets]
-    if: ${{ needs.lint_and_unit_tests.outputs.changes }}
+    if: ${{ github.event_name == 'push' || needs.lint_and_unit_tests.outputs.changes }}
     runs-on: ubuntu-latest
     outputs:
       deploy_id: ${{steps.netlify_info.outputs.deploy_id}}
@@ -97,8 +101,9 @@ jobs:
     - name: Deploy netlify preview on push
       id: netlify
       run: |
-        pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-        netlifyDeploy=$(netlify deploy --dir ./hello-world/dist/ \
+        netlifyDeploy=$(netlify deploy \
+        --dir ./hello-world/dist/ \
+        --functions ./netlify/functions/src/ \
         --timeout 600 \
         --json | tr -d '\n')
 
