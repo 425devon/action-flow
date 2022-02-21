@@ -103,8 +103,8 @@ jobs:
       run: |
         netlifyDeploy=$(netlify deploy \
         --dir ./hello-world/dist/ \
-        --functions ./netlify/functions/src/ \
-        --timeout 600 \
+        --functions ./hello-world/netlify/functions/src/ \
+        --timeout 180 \
         --json | tr -d '\n')
 
         echo "::set-output name=deploy_id ::$(echo $netlifyDeploy|jq '.deploy_id')"
