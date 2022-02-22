@@ -103,11 +103,20 @@ jobs:
       run: |
         netlifyDeploy=$(netlify deploy \
         --dir ./hello-world/dist/ \
+        --functions ./netlify/functions/src/ \
         --timeout 180 \
         --json | tr -d '\n')
 
-        echo "::set-output name=deploy_id ::$(echo $netlifyDeploy|jq '.deploy_id')"
-        echo "::set-output name=deploy_url ::$(echo $netlifyDeploy|jq '.deploy_url')"
+        end=$((SECONDS+120))
+        while [ $SECONDS -lt $end ]; do
+          if [[ $netlifyDeploy ]]; then
+            echo "site is deployed!"
+            echo "::set-output name=deploy_id ::$(echo $netlifyDeploy|jq '.deploy_id')"
+            echo "::set-output name=url ::$(echo $netlifyDeploy|jq '.deploy_url')"
+            break
+          fi
+          sleep 1
+        done
       env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
@@ -120,47 +129,6 @@ jobs:
         max_timeout: action-flow
       env:
         NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-
-    # - name: Deploy netlify preview on push
-    #   id: netlify
-    #   run: |
-    #     netlifyDeploy=$(netlify deploy \
-    #     --dir ./hello-world/dist/ \
-    #     --functions ./hello-world/netlify/functions/src/ \
-    #     --timeout 180 \
-    #     --json | tr -d '\n')
-
-    #     echo "::set-output name=deploy_id ::$(echo $netlifyDeploy|jq '.deploy_id')"
-    #     echo "::set-output name=deploy_url ::$(echo $netlifyDeploy|jq '.deploy_url')"
-    #   env:
-    #       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-    #       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-
-    # on PR follows https://deploy-preview-9--action-flow.netlify.app/ format
-    # on merge follows https://main--action-flow.netlify.app/ format
-
-    # - name: format wait for netlify url
-    #   id: wait-url
-    #   run: |
-    #     if [[ $GITHUB_EVENT_NAME == pull_request ]]; then
-    #       pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-    #       echo "::set-output name=wait_url::https://deploy-preview-"$pull_number"--action-flow.netlify.app/"
-    #     else
-    #       echo "::set-output name=wait_url::https://${{github.base_ref}}--action-flow.netlify.app/"
-    #     fi
-
-    # - name: wait for netlify
-    #   id: wait
-    #   uses: ./.github/actions/wait-for-netlify
-    #   with:
-    #     site_url: ${{steps.wait-url.outputs.wait_url}}
-    #     max_timeout: 180
-
-    # - name: set outputs
-    #   id: netlify_info
-    #   run: |
-    #     echo "::set-output name=deploy_id::${{ steps.netlify.outputs.deploy_id }}"
-    #     echo "::set-output name=deploy_url::${{ steps.netlify.outputs.deploy_url }}"
 
   smoketest_client:
     name: Smoke test client
@@ -177,3 +145,4 @@ jobs:
         run: |
           echo "id: ${{needs.netlify_preview.outputs.deploy_id}}"
           echo "url: ${{needs.netlify_preview.outputs.deploy_url}}"
+          echo "run client smoketest here with url: ${{needs.netlify_preview.outputs.deploy_url}}"
