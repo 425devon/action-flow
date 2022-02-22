@@ -82,8 +82,8 @@ jobs:
     if: ${{ github.event_name == 'push' || needs.lint_and_unit_tests.outputs.changes }}
     runs-on: ubuntu-latest
     outputs:
-      deploy_id: ${{steps.netlify_info.outputs.deploy_id}}
-      deploy_url: ${{steps.netlify_info.outputs.deploy_url}}
+      deploy_id: ${{steps.wait.outputs.deploy_id}}
+      deploy_url: ${{steps.wait.outputs.url}}
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v2
@@ -110,7 +110,7 @@ jobs:
 
     - name: Wait for the Netlify Preview
       uses: kamranayub/wait-for-netlify-action@v2.0.3
-      id: netlify
+      id: wait
       with:
         site_name: 'action-flow'
         max_timeout: 600
