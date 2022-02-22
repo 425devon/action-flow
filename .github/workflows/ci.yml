@@ -112,6 +112,21 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
+    # - name: Deploy netlify preview on push
+    #   id: netlify
+    #   run: |
+    #     netlifyDeploy=$(netlify deploy \
+    #     --dir ./hello-world/dist/ \
+    #     --functions ./hello-world/netlify/functions/src/ \
+    #     --timeout 180 \
+    #     --json | tr -d '\n')
+
+    #     echo "::set-output name=deploy_id ::$(echo $netlifyDeploy|jq '.deploy_id')"
+    #     echo "::set-output name=deploy_url ::$(echo $netlifyDeploy|jq '.deploy_url')"
+    #   env:
+    #       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    #       NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
     # on PR follows https://deploy-preview-9--action-flow.netlify.app/ format
     # on merge follows https://main--action-flow.netlify.app/ format
 
@@ -130,7 +145,7 @@ jobs:
       uses: ./.github/actions/wait-for-netlify
       with:
         site_url: ${{steps.wait-url.outputs.wait_url}}
-        max_timeout: 120
+        max_timeout: 180
 
     - name: set outputs
       id: netlify_info
