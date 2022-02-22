@@ -103,7 +103,6 @@ jobs:
       run: |
         netlifyDeploy=$(netlify deploy \
         --dir ./hello-world/dist/ \
-        --functions ./hello-world/netlify/functions/src/ \
         --timeout 180 \
         --json | tr -d '\n')
 
@@ -131,7 +130,7 @@ jobs:
       uses: ./.github/actions/wait-for-netlify
       with:
         site_url: ${{steps.wait-url.outputs.wait_url}}
-        max_timeout: 600
+        max_timeout: 120
 
     - name: set outputs
       id: netlify_info
