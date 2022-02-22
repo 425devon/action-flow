@@ -103,7 +103,7 @@ jobs:
       run: |
         netlifyDeploy=$(netlify deploy \
         --dir ./hello-world/dist/ \
-        --functions ./hello-world/netlify/functions/src/ \
+        --functions hello-world/netlify/functions/src/ \
         --timeout 180 \
         --json | tr -d '\n')
 
