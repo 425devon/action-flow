@@ -108,31 +108,40 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
+    - name: Wait for the Netlify Preview
+      uses: kamranayub/wait-for-netlify-action@v2.0.3
+      id: netlify
+      with:
+        site_name: 'action-flow'
+        max_timeout: 600
+      env:
+        NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
     # on PR follows https://deploy-preview-9--action-flow.netlify.app/ format
     # on merge follows https://main--action-flow.netlify.app/ format
 
-    - name: format wait for netlify url
-      id: wait-url
-      run: |
-        if [[ $GITHUB_EVENT_NAME == pull_request ]]; then
-          pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          echo "::set-output name=wait_url::https://deploy-preview-"$pull_number"--action-flow.netlify.app/"
-        else
-          echo "::set-output name=wait_url::https://${{github.base_ref}}--action-flow.netlify.app/"
-        fi
+    # - name: format wait for netlify url
+    #   id: wait-url
+    #   run: |
+    #     if [[ $GITHUB_EVENT_NAME == pull_request ]]; then
+    #       pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+    #       echo "::set-output name=wait_url::https://deploy-preview-"$pull_number"--action-flow.netlify.app/"
+    #     else
+    #       echo "::set-output name=wait_url::https://${{github.base_ref}}--action-flow.netlify.app/"
+    #     fi
 
-    - name: wait for netlify
-      id: wait
-      uses: ./.github/actions/wait-for-netlify
-      with:
-        site_url: ${{steps.wait-url.outputs.wait_url}}
-        max_timeout: 600
+    # - name: wait for netlify
+    #   id: wait
+    #   uses: ./.github/actions/wait-for-netlify
+    #   with:
+    #     site_url: ${{steps.wait-url.outputs.wait_url}}
+    #     max_timeout: 600
 
-    - name: set outputs
-      id: netlify_info
-      run: |
-        echo "::set-output name=deploy_id::${{ steps.netlify.outputs.deploy_id }}"
-        echo "::set-output name=deploy_url::${{ steps.netlify.outputs.deploy_url }}"
+    # - name: set outputs
+    #   id: netlify_info
+    #   run: |
+    #     echo "::set-output name=deploy_id::${{ steps.netlify.outputs.deploy_id }}"
+    #     echo "::set-output name=deploy_url::${{ steps.netlify.outputs.deploy_url }}"
 
   smoketest_client:
     name: Smoke test client
