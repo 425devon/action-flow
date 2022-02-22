@@ -121,15 +121,6 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-    - name: Wait for the netlify preview
-      id: wait
-      uses: kamranayub/wait-for-netlify-action@v2.0.3
-      with:
-        site_name: 'action-flow'
-        max_timeout: action-flow
-      env:
-        NETLIFY_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-
   smoketest_client:
     name: Smoke test client
     needs: [lint_and_unit_tests, netlify_preview]
