@@ -148,7 +148,7 @@ jobs:
           yarn global add netlify-cli
       - name: promote
         run: |
-          netlify api lockDeploy --data '{"deploy_id": "${{needs.netlify_preview.outputs.deploy_id}}"}'
+          netlify api lockDeploy --data '{"deploy_id": ${{needs.netlify_preview.outputs.deploy_id}}}'
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
