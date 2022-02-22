@@ -79,7 +79,7 @@ jobs:
   netlify_preview:
     name: netlify_preview
     needs: [lint_and_unit_tests, build_assets]
-    if: ${{ needs.lint_and_unit_tests.outputs.changes }}
+    if: ${{ github.event_name == 'push' || needs.lint_and_unit_tests.outputs.changes }}
     runs-on: ubuntu-latest
     outputs:
       deploy_id: ${{steps.netlify_info.outputs.deploy_id}}
