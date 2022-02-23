@@ -56,20 +56,20 @@ jobs:
 
       - run: yarn --cwd hello-world --frozen-lockfile
 
-      - name: build konnect client on push
+      - name: build client on push
         id: build-client
         run: |
           yarn --cwd hello-world build
 
-          mkdir -p artifacts/hello-world
-          cp -R hello-world/dist artifacts/hello-world
+          mkdir -p artifacts/hello-world-build
+          cp -R hello-world/dist artifacts/hello-world-build
 
           if [[ -d hello-world/dist ]]; then
-            tar -czvf artifacts/hello-world/hello-world.tar.gz hello-world/dist
+            tar -czvf artifacts/hello-world/hello-world.tar.gz hello-world-build/dist
           fi
 
           if [[ -d hello-world/dist ]]; then
-            cp hello-world/netlify.toml artifacts/hello-world/dist
+            cp hello-world/netlify.toml artifacts/hello-world-build/dist
           fi
 
       - name: Temporarily save artifacts
@@ -102,7 +102,7 @@ jobs:
       id: netlify
       run: |
         netlifyDeploy=$(netlify deploy \
-        --dir ./hello-world/dist/ \
+        --dir ./hello-world-build/dist/ \
         --functions hello-world/netlify/functions/src/ \
         --timeout 180 \
         --json | tr -d '\n')
@@ -161,6 +161,12 @@ jobs:
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v2
+
+      - name: download_artifacts
+        uses: actions/download-artifact@v2
+        id: download_artifacts
+        with:
+          name: artifacts
         
       - name: get current tag 
         id: current_tag
@@ -199,7 +205,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with: 
           allowUpdates: true
-          artifacts: .temp/konnect-client.tar.gz
+          artifacts: ./hello-world-build
           prerelease: true
           bodyFile: ${{steps.draft.outputs.body}}
           tag: af-${{ steps.bump-semver.outputs.new_version }}
