@@ -159,6 +159,9 @@ jobs:
     runs-on: ubuntu-20.04
     if: ${{github.event_name == 'push' && github.ref == 'refs/heads/main'}}
     steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+        
       - name: get current tag 
         id: current_tag
         run: |
