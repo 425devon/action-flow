@@ -188,22 +188,33 @@ jobs:
           current_version: ${{ steps.current_tag.outputs.current_tag }}
           level: prerelease
 
-      - name: Draft GH Release
-        id: draft
-        uses: release-drafter/release-drafter@v5
+      # - name: Draft GH Release
+      #   id: draft
+      #   uses: release-drafter/release-drafter@v5
+      #   with:
+      #     name: af-${{ steps.bump-semver.outputs.new_version }}
+      #     tag: af-${{ steps.bump-semver.outputs.new_version }}
+      #     version: af-${{ steps.bump-semver.outputs.new_version }}
+      #     publish: true
+      #     prerelease: true
+      #     commitish: ${{ github.ref }}
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: create draft md 
+      #   run: | 
+      #     echo -e "${{ steps.draft.outputs.body }}" > draft.md
+
+      - name: create changelog bodyFile
+        run: touch hello-world-changelog.md
+
+      - name: Build Changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v2.9.0
         with:
-          name: af-${{ steps.bump-semver.outputs.new_version }}
-          tag: af-${{ steps.bump-semver.outputs.new_version }}
-          version: af-${{ steps.bump-semver.outputs.new_version }}
-          publish: true
-          prerelease: true
-          commitish: ${{ github.ref }}
+          outputFile: hello-world-changelog.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: create draft md 
-        run: | 
-          echo -e "${{ steps.draft.outputs.body }}" > draft.md
 
       - name: create release
         uses: ncipollo/release-action@v1
@@ -211,7 +222,7 @@ jobs:
           allowUpdates: true
           artifacts: ./hello-world-build/hello-world.tar.gz
           prerelease: true
-          bodyFile: draft.md
+          bodyFile: hello-world-changelog.md
           tag: af-${{ steps.bump-semver.outputs.new_version }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
