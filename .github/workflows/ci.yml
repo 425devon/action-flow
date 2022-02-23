@@ -203,7 +203,8 @@ jobs:
 
       - name: create draft md 
         run: | 
-          echo "${{ steps.draft.outputs.body }}" > draft.md
+          echo -e "${{ steps.draft.outputs.body }}"
+          echo -e "${{ steps.draft.outputs.body }}" > draft.md
 
       - name: create release
         uses: ncipollo/release-action@v1
