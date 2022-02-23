@@ -201,7 +201,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - run: echo ${{steps.draft.outputs.body}} > draft.md
+      - name: create draft md 
+        run: echo ${{ steps.draft.outputs.body }} > ./draft.md
 
       - name: create release
         uses: ncipollo/release-action@v1
