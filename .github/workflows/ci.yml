@@ -153,3 +153,50 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
+  tag_release:
+    name: tag release 
+    needs: promote_client_dev
+    runs-on: ubuntu-20.04
+    if: ${{github.event_name == 'push' && github.ref == 'refs/heads/main'}}
+    steps:
+      - name: get current tag 
+        id: current_tag
+        run: |
+          git fetch --tags
+          git fetch --prune --unshallow || true
+
+          CURRENT_TAG=$(git describe --match "af-*" --abbrev=0 --always --tags || true)
+          if [[ ${CURRENT_TAG} == af* ]]; then
+            echo "::set-output name=current_tag::${CURRENT_TAG#af-}"
+          else
+            echo "::set-output name=current_tag::v0.0.0"
+          fi
+
+      - name: bump tag version
+        id: bump-semver
+        uses: actions-ecosystem/action-bump-semver@v1.0.0
+        with:
+          current_version: ${{ steps.current_tag.current_tag }}
+          level: prerelease
+
+      - name: Draft GH Release
+        id: draft
+        uses: release-drafter/release-drafter@v5
+        with:
+          name: af-${{ steps.bump-semver.outputs.new_version }}
+          tag: af-${{ steps.bump-semver.outputs.new_version }}
+          version: af-${{ steps.bump-semver.outputs.new_version }}
+          publish: true
+          prerelease: true
+          commitish: ${{ github.ref }}
+
+      - name: create release
+        uses: ncipollo/release-action@v1
+        with: 
+          allowUpdates: true
+          artifacts: .temp/konnect-client.tar.gz
+          prerelease: true
+          bodyFile: ${{steps.draft.outputs.body}}
+          tag: af-${{ steps.bump-semver.outputs.new_version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
