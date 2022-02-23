@@ -204,7 +204,9 @@ jobs:
       - name: create draft md 
         run: | 
           echo -e "${{ steps.draft.outputs.body }}"
+          echo "monkey banana raffle" > monkey.txt
           echo -e "${{ steps.draft.outputs.body }}" > draft.md
+          ls
 
       - name: create release
         uses: ncipollo/release-action@v1
