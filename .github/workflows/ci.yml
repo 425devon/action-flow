@@ -179,7 +179,7 @@ jobs:
         id: bump-semver
         uses: actions-ecosystem/action-bump-semver@v1.0.0
         with:
-          current_version: ${{ steps.current_tag.current_tag }}
+          current_version: ${{ steps.current_tag.outputs.current_tag }}
           level: prerelease
 
       - name: Draft GH Release
