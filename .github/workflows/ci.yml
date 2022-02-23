@@ -65,7 +65,7 @@ jobs:
           cp -R hello-world/dist artifacts/hello-world-build
 
           if [[ -d hello-world/dist ]]; then
-            tar -czvf artifacts/hello-world/hello-world.tar.gz hello-world-build/dist
+            tar -czvf artifacts/hello-world-build/hello-world.tar.gz hello-world/dist
           fi
 
           if [[ -d hello-world/dist ]]; then
