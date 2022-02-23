@@ -203,16 +203,13 @@ jobs:
 
       - name: create draft md 
         run: | 
-          echo -e "${{ steps.draft.outputs.body }}"
-          echo "monkey banana raffle" > monkey.txt
           echo -e "${{ steps.draft.outputs.body }}" > draft.md
-          ls
 
       - name: create release
         uses: ncipollo/release-action@v1
         with: 
           allowUpdates: true
-          artifacts: ./hello-world-build
+          artifacts: ./hello-world-build/hello-world.tar.gz
           prerelease: true
           bodyFile: draft.md
           tag: af-${{ steps.bump-semver.outputs.new_version }}
