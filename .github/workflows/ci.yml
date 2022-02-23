@@ -201,13 +201,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - run: echo ${{steps.draft.outputs.body}} > draft.md
+
       - name: create release
         uses: ncipollo/release-action@v1
         with: 
           allowUpdates: true
           artifacts: ./hello-world-build
           prerelease: true
-          bodyFile: ${{steps.draft.outputs.body}}
+          bodyFile: draft.md
           tag: af-${{ steps.bump-semver.outputs.new_version }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
