@@ -192,6 +192,8 @@ jobs:
           publish: true
           prerelease: true
           commitish: ${{ github.ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: create release
         uses: ncipollo/release-action@v1
