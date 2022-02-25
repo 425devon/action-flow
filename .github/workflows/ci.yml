@@ -61,15 +61,10 @@ jobs:
         run: |
           yarn --cwd hello-world build
 
-          mkdir -p artifacts/hello-world-build
-          cp -R hello-world/dist artifacts/hello-world-build
+          mkdir -p artifacts
 
           if [[ -d hello-world/dist ]]; then
-            tar -czvf artifacts/hello-world-build/hello-world.tar.gz hello-world/dist
-          fi
-
-          if [[ -d hello-world/dist ]]; then
-            cp hello-world/netlify.toml artifacts/hello-world-build/dist
+            tar -czvf artifacts/hello-world.tar.gz hello-world/dist hello-world/netlify hello-world/netlify.toml
           fi
 
       - name: Temporarily save artifacts
@@ -98,12 +93,13 @@ jobs:
       with:
         name: artifacts
 
+    - name: unpack artifact
+      run: tar -xvzf hello-world.tar.gz
+
     - name: Deploy netlify preview on push
       id: netlify
       run: |
         netlifyDeploy=$(netlify deploy \
-        --dir ./hello-world-build/dist/ \
-        --functions hello-world/netlify/functions/src/ \
         --timeout 180 \
         --json | tr -d '\n')
 

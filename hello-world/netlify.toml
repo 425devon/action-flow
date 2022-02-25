@@ -1,3 +1,11 @@
+[build]
+  base = "hello-world"
+  publish = "dist/"
+  command = "yarn run build"
+
+[functions]
+  directory = "netlify/functions/lib"
+
 [[redirects]]
   from = "/api/*"
   to = "/"
